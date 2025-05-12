@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星際漫步</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>你的臉部照片</h2>
+        <div class="text-display">請將臉對準並塞滿畫面圓圈，不滿意可以重複開啟相機再擷取</div><br>
+        <div id="captureContainer" style="position: relative; width: 300px; height: 300px; overflow: hidden; background-color: black; border-radius: 50%;">
+            <video id="videoElement" autoplay playsinline style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; border-radius: 50%;"></video>
+            <img id="capturedImage" src="" alt="Captured Face" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        </div>
+        <br>
+        <button class="button" onclick="openCamera()">開啟相機</button><br>
+        <button class="button" onclick="captureFace()">擷取</button><br>
+        <button class="button" onclick="window.location.href='/drawing'">進入畫布</button>
+    </div>
+
+    <script>
+        let video = document.getElementById('videoElement');
+        let capturedImage = document.getElementById('capturedImage');
+        let streamActive = false;
+
+        function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        video.srcObject = stream;
+                        streamActive = true;
+                        video.style.display = 'block';
+                        capturedImage.style.display = 'none';
+                    })
+                    .catch(function(err) {
+                        console.error("Error accessing camera: ", err);
+                    });
+            }
+        }
+
+        function captureFace() {
+            if (!streamActive) return;
+
+            // Create a temporary canvas to capture the video frame
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 200; // Adjusted to capture a smaller circular region
+            tempCanvas.height = 200;
+            let ctx = tempCanvas.getContext('2d');
+
+            // Calculate the visible portion of the video feed
+            let videoWidth = video.videoWidth;
+            let videoHeight = video.videoHeight;
+            let containerWidth = 300;
+            let containerHeight = 300;
+
+            let scale = Math.max(containerWidth / videoWidth, containerHeight / videoHeight);
+            let scaledWidth = videoWidth * scale;
+            let scaledHeight = videoHeight * scale;
+
+            let cropX = (scaledWidth - containerWidth) / 2 / scale;
+            let cropY = (scaledHeight - containerHeight) / 2 / scale;
+
+            // Adjust the crop region to center the smaller circular area
+            let cropRegionSize = Math.min(videoWidth, videoHeight) * 0.67; // Capture 67% of the smallest dimension
+            cropX = (videoWidth - cropRegionSize) / 2;
+            cropY = (videoHeight - cropRegionSize) / 2;
+
+            ctx.drawImage(video, cropX, cropY, cropRegionSize, cropRegionSize, 0, 0, tempCanvas.width, tempCanvas.height);
+
+            // Convert the canvas content to a base64 image
+            let dataURL = tempCanvas.toDataURL('image/png');
+            capturedImage.src = dataURL;
+
+            // Display the captured image and hide the video
+            capturedImage.style.display = 'block';
+            video.style.display = 'none';
+
+            // Send the image to the server to save as face.png
+            fetch('/save_face', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ faceData: dataURL })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Face saved:', data);
+            })
+            .catch(err => console.error('Error saving face:', err));
+
+            // Stop the video stream
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            streamActive = false;
+        }
+    </script>
+</body>
+</html>

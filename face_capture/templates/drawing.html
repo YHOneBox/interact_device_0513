@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>畫布</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>身體畫布</h2>
+        <div class="text-display">在白色框框裡畫上喜歡的身體圖案</div><br>
+        <canvas id="canvas" width="400" height="300" style="border: 2px solid black; background-color: white;"></canvas>
+        <br>
+        <button class="button" onclick="clearCanvas()">清空畫布(重畫畫)</button><br>
+        <button class="button" onclick="completeDrawing()">完成圖案</button>
+    </div>
+
+    <script>
+        let canvas = document.getElementById('canvas');
+        let context = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        canvas.addEventListener('mousedown', function (e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+        canvas.addEventListener('mousemove', function (e) {
+            if (isDrawing) {
+                context.beginPath();
+                context.moveTo(lastX, lastY);
+                context.lineTo(e.offsetX, e.offsetY);
+                context.strokeStyle = 'black';
+                context.lineWidth = 5;
+                context.stroke();
+                context.closePath();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+        });
+
+        canvas.addEventListener('mouseup', function () {
+            isDrawing = false;
+        });
+
+        function clearCanvas() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function completeDrawing() {
+            let canvasData = canvas.toDataURL('image/png');
+            fetch('/save_canvas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ canvasData: canvasData })
+            })
+            .then(res => res.text())
+            .then(data => {
+                if (data.includes('Canvas data saved')) {
+                    //alert('畫布已保存');
+                    window.location.href = '/final';
+                } else {
+                    //alert('保存失敗: ' + data);
+                }
+            })
+            .catch(err => console.error('Error saving canvas:', err));
+        }
+    </script>
+</body>
+</html>

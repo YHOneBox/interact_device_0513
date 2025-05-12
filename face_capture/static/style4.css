@@ -1,0 +1,84 @@
+/* body �˦� */
+body {
+    font-family: "�L�n������", Arial, sans-serif; /* ���w�r�� */
+    text-align: center; /* ��r�m�� */
+    background-image: url("background.png"); /* �I���Ϥ� */
+    background-size: cover; /* �I���Ϥ��j�p�л\��Ӱϰ� */
+    background-repeat: no-repeat; /* �I���Ϥ������� */
+    background-attachment: fixed; /* �I���Ϥ��T�w���� */
+    color: white; /* ��r�C�� */
+    /* padding: 30px; ���e�P������t���Z�� */
+    margin: 0;
+    padding: 0;
+}
+
+/* �e���˦� */
+.container {
+    margin: auto;
+    /* margin-top: 180px; */
+    text-align: center; 
+    position: relative;
+}
+
+/* ���s�˦� */
+.button {
+    display: inline-block; /* �H�椺�覡��� */
+    padding: 8px 15px; /* �W�U���k�������Z */
+    font-size: 16px; /* �r��j�p */
+    color: #000000; /* �r���C�� */
+    background-color: #7D88B1; /* ���s�I���C�� */
+    border: none; /* ��س]�m���L */
+    border-radius: 5px; /* �ꨤ */
+    cursor: pointer; /* ���ЧΪ� */
+    /* margin-top: 200px; */
+}
+
+/* ���s�ƹ��a���ĪG */
+button:hover {
+    background-color: #0E0D27; /* �ƹ��a���ɪ��I���C�� */
+    color: #7D88B1; /* �ƹ��a���ɪ��r���C�� */
+}
+
+/* ���s�T�Ϊ��A�˦� */
+button:disabled {
+    background-color: #ccc; /* �T�ήɪ��I���C�� */
+    cursor: not-allowed; /* ���ЧΪ����T�Ϊ��A */
+}
+
+/* �i��ʤ����˦� */
+.draggable {
+    position: absolute; /* ����w�� */
+    cursor: move; /* ��ʮɪ����ЧΪ� */
+}
+
+/* �y���Ϥ��˦� */
+#faceImage {
+    border-radius: 50%; /* ������ */
+    transform: scale(0.25); /* �Ϥ��Y�� */
+    transform-origin: center; /* �H�Ϥ����߬���� */
+    max-width: none; /* �T�O�Ϥ���j�ᤣ���̤j�e�׭��� */
+}
+
+/* ����Ϥ��˦� */
+#canvasImage {
+    transform: scale(0.1); /* �Ϥ��Y�� */
+    transform-origin: center; /* �H�Ϥ����߬���� */
+    max-width: none; /* �T�O�Ϥ���j�ᤣ���̤j�e�׭��� */
+}
+.draggable {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+
+#exitButton{
+    display: none;
+}
+.text-display {
+    color: white;
+    background-color: transparent;
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
+}

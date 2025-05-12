@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星際漫步</title>
+    <!-- 引入外部 CSS 樣式表 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顯示標題圖片 -->
+        <img src="{{ url_for('static', filename='title.png') }}" width="1000"><br>
+        <img src="{{ url_for('static', filename='logo.png') }}" width="500"><br>
+        <!-- 顯示程式碼中設定的文字 -->
+        <div class="text-display">按下開始按鈕，讓我們一步一步製作你的專屬替身吧！</div><br>
+    </div>
+    <button class="button" onclick="window.location.href='/role'">開始</button>
+    <!-- <button class="button" onclick="window.location.href='/run_python_program'">開始</button> -->
+</body>
+</html>

@@ -1,0 +1,46 @@
+/* body �˦� */
+body {
+    text-align: center; /* ��r�m�� */
+    background-image: url("background.png"); /* �I���Ϥ� */
+    background-size: cover; /* �I���Ϥ��j�p�л\��Ӱϰ� */
+    background-repeat: no-repeat; /* �I���Ϥ������� */
+    background-attachment: fixed; /* �I���Ϥ��T�w���� */
+    color: white; /* ��r�C�� */
+    padding: 50px; /* ���e�P������t���Z�� */
+}
+
+/* ���s�˦� */
+.button {
+    display: inline-block; /* �H�椺�覡��� */
+    padding: 8px 15px; /* �W�U���k�������Z */
+    font-size: 16px; /* �r��j�p */
+    color: #000000; /* �r���C�� */
+    background-color: #7D88B1; /* ���s�I���C�� */
+    border: none; /* ��س]�m���L */
+    border-radius: 5px; /* �ꨤ */
+    cursor: pointer; /* ���ЧΪ� */
+}
+
+/* ���s�ƹ��a���ĪG */
+button:hover {
+    background-color: #0E0D27; /* �ƹ��a���ɪ��I���C�� */
+    color: #7D88B1; /* �ƹ��a���ɪ��r���C�� */
+}
+
+/* ���s�T�Ϊ��A�˦� */
+button:disabled {
+    background-color: #ccc; /* �T�ήɪ��I���C�� */
+    cursor: not-allowed; /* ���ЧΪ����T�Ϊ��A */
+}
+
+/* �e�������Ϥ��˦� */
+.container img {
+    margin-bottom: 50px; /* �Ϥ��P��L�������U��Z */
+}
+.text-display {
+    color: white;
+    background-color: transparent;
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
+}

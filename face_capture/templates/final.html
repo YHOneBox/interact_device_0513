@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>星際漫步</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style4.css') }}">
+</head>
+<body>
+    <p id = "titleheader">請將圖片拖移到造型對應的位置，再按下製作完成的按鈕</p>
+    <div class="container" id = "avator" >
+        <img id="clickedImage" class="responsive-image">
+        <img id="faceImage" class="draggable">
+        <img id="canvasImage" class="draggable">
+    </div>
+    <p id = "finishP" style = "display: none">製作完成囉！請掃描QR code控制替身！</p>
+    
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="qr_code_modal" alt="QR Code" height="400" width="400"/>
+        </div>
+    </div>
+    
+    <button id="saveButton" class="button" >製作完成</button><br><br>
+    <button id="exitButton" class="button" onclick="resetAndReturn()">回主頁</button>
+    
+    <script>
+       
+        var clickedImageName = localStorage.getItem('clickedImage');
+
+        if (clickedImageName) {
+            var clickedImageElement = document.getElementById('clickedImage');
+            clickedImageElement.src = "{{ url_for('static', filename='') }}" + clickedImageName;
+
+            clickedImageElement.onload = function () {
+                var container = document.querySelector('.container');
+                container.style.width = clickedImageElement.width + 'px';
+                container.style.height = clickedImageElement.height + 'px';
+            };
+        }
+
+        var faceImageElement = document.getElementById('faceImage');
+        faceImageElement.src = "{{ url_for('static', filename='face.jpg') }}";
+
+        var canvasImageElement = document.getElementById('canvasImage');
+        canvasImageElement.src = "{{ url_for('static', filename='canvas.jpg') }}";
+
+        var draggableElements = document.getElementsByClassName('draggable');
+        Array.from(draggableElements).forEach(function(element) {
+            var offsetX, offsetY;
+
+            element.addEventListener('mousedown', function(e) {
+                offsetX = e.clientX - element.offsetLeft;
+                offsetY = e.clientY - element.offsetTop;
+                document.addEventListener('mousemove', dragElement);
+            });
+
+            document.addEventListener('mouseup', function() {
+                document.removeEventListener('mousemove', dragElement);
+            });
+
+            function dragElement(e) {
+                element.style.left = (e.clientX - offsetX) + 'px';
+                element.style.top = (e.clientY - offsetY) + 'px';
+            }
+        });
+
+        saveButton.addEventListener('click', function () {
+            var container = document.querySelector('.container');
+
+            var originalBackground = container.style.backgroundColor;
+            container.style.backgroundColor = 'transparent';
+
+            html2canvas(container, {
+                backgroundColor: null,
+                scrollX: 0,
+                scrollY: 0
+            }).then(function (canvas) {
+                var image = canvas.toDataURL('image/png');
+                var sequential_id = parseInt(localStorage.getItem('sequential_id'), 10);
+
+                // 檢查sequential_id是否為有效數字，若無則設為0
+                if (isNaN(sequential_id)) {
+                    sequential_id = 0;
+                }
+
+                fetch('/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Sequential-ID': sequential_id
+                    },
+                    body: JSON.stringify({ canvasData: image })
+                })
+                .then(response => response.text())
+                .then(response => {
+                    if (response.includes('Canvas data saved')) {
+                        //alert('圖片已保存');
+                        
+                        var qr_code_img = document.getElementById('qr_code_modal');
+                        //qr_code_img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://yhonebox.github.io/interact_device/`;
+                        qr_code_img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://yhonebox.github.io/dct114/index.html?id=${sequential_id}`;
+                        var newSequentialID = sequential_id + 1;
+                        localStorage.setItem('sequential_id', newSequentialID.toString());
+                        showModal();
+                    } else {
+                        //alert('保存失敗: ' + response);
+                    }
+                }).catch(error => {
+                    console.error('Error saving canvas:', error);
+                });
+
+                container.style.backgroundColor = originalBackground;
+            });
+            saveButton.style.display = 'none';
+            document.getElementById('avator').style.display = 'none';
+            document.getElementById('titleheader').style.display = 'none';
+            document.getElementById('exitButton').style.display = 'inline-block';
+            document.getElementById('finishP').style.display = 'block';
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('sequential_id')) {
+                localStorage.setItem('sequential_id', '0');
+            }
+        });
+
+        function showModal() {
+            var modal = document.getElementById("qrModal");
+            var span = document.getElementsByClassName("close")[0];
+
+            modal.style.display = "block";
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        function resetAndReturn() {
+            var currentId = parseInt(localStorage.getItem('sequential_id') || '0', 10);
+            localStorage.setItem('sequential_id', currentId.toString());
+            window.location.href = '/';
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>

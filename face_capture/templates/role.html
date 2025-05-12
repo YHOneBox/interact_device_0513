@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>星際漫步</title>
+    <!-- 引入外部 CSS 樣式表 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
+    <div class="text-display">請選擇喜歡的身體樣式(點擊圖片)</div><br><br><br><br>
+    <div class="container">
+        
+        <!-- 顯示圖片，點擊後調用 JavaScript 函數 -->
+        <img src="{{ url_for('static', filename='001.png') }}" class="responsive-image" onclick="imageClicked('001.png')">
+        <img src="{{ url_for('static', filename='002.png') }}" class="responsive-image" onclick="imageClicked('002.png')">
+        <img src="{{ url_for('static', filename='003.png') }}" class="responsive-image" onclick="imageClicked('003.png')">
+        <img src="{{ url_for('static', filename='004.png') }}" class="responsive-image" onclick="imageClicked('004.png')">
+    </div>
+
+    <!-- JavaScript 腳本，處理圖片點擊事件 -->
+    <script>
+        function imageClicked(imageName) {
+            // 將點擊的圖片名稱記錄到本地儲存
+            localStorage.setItem('clickedImage', imageName);
+            // 重定向到指定URL
+            window.location.href = '/run_python_program';
+        }
+    </script>
+</body>
+</html>
