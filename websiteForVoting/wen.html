@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info</title>
+</head>
+<body>
+    <div id="voteMessage">Loading...</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 發送AJAX請求到PHP腳本來獲取資料
+            fetch('get_data.php')
+                .then(response => response.json())
+                .then(data => {
+                    const voteMessage = document.getElementById('voteMessage');
+                    if (data.status === 'success') {
+                        // 將 visitorId 轉換為三位數格式
+                        const formattedVisitorId = String(data.visitorId).padStart(3, '0');
+                        voteMessage.innerText = `${formattedVisitorId} vote to: ${data.groupNumber}`;
+                    } else {
+                        voteMessage.innerText = 'Error: ' + data.message;
+                    }
+                })
+                .catch(error => {
+                    const voteMessage = document.getElementById('voteMessage');
+                    voteMessage.innerText = 'Error: ' + error;
+                });
+        });
+    </script>
+
+</body>
+</html>

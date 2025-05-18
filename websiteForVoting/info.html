@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info</title>
+</head>
+<body>
+    <div id="voteMessage"></div>
+
+    <script>
+        // 解析 URL 中的查詢參數來顯示投票信息
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            var visitorId = params.get('visitorId');
+            var groupNumber = params.get('groupNumber');
+            const voteMessage = document.getElementById('voteMessage');
+
+            localStorage.setItem('visitorId', visitorId);
+            localStorage.setItem('groupNumber', groupNumber);
+
+            // 發送AJAX請求到PHP腳本
+            if (visitorId && groupNumber) {
+                fetch('update_data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ visitorId: visitorId, groupNumber: groupNumber })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    voteMessage.innerText = data;
+                })
+                .catch(error => {
+                    voteMessage.innerText = 'Error: ' + error;
+                });
+            } else {
+                voteMessage.innerText = 'Missing parameters.';
+            }
+            
+            voteMessage.innerHTML = `<p>Visitor ID: ${visitorId} has voted for Group ${groupNumber}.</p>`;
+
+            // 在5秒後重定向
+            setTimeout(function(){
+                window.location.href = "/voted.html";
+            }, 1000);
+        });
+    </script>
+
+</body>
+</html>

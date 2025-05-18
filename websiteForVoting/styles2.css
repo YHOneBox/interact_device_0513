@@ -1,0 +1,33 @@
+body 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #202d5f;
+    font-family: Arial, sans-serif;
+}
+
+.container 
+{
+    width: 100%;
+    max-width: 400px; /* 手機螢幕寬度 */
+    padding: 20px;
+    background: url('images/bg3.png') no-repeat center center;
+    background-size: cover; /* 填滿整個容器 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+h1{
+    color: #7D88B1;
+    font-size: 40px;
+    text-shadow: 4px 4px #000000;
+}
+h2{
+    color: #9e3c3c;
+    font-size: 40px;
+    text-shadow: 4px 4px #000000;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <img src="images/logo.png" alt="logo">
+        <h4>所有的組別都看完了嗎?<br>看完的話，就來為你的人物選擇一個想居住的星球吧！！</h4>
+        
+        <!-- 投票項目 -->
+        <div class="voting-section">
+            <h2>第一組_深淵之光</h2>
+            <img src="images/group1.png" alt="Group 1" width="200">
+            <button onclick="openModal(1)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第二組_廢柴勇者與他的不正經小夥伴</h2>
+            <img src="images/group2.png" alt="Group 2" width="200">
+            <button onclick="openModal(2)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第三組_小小守護者</h2>
+            <img src="images/group3.png" alt="Group 3" width="200">
+            <button onclick="openModal(3)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第四組_家秘日記</h2>
+            <img src="images/group4.png" alt="Group 4" width="200">
+            <button onclick="openModal(4)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第五組_JustRun</h2>
+            <img src="images/group5.png" alt="Group 5" width="200">
+            <button onclick="openModal(5)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第六組_戰略AI</h2>
+            <img src="images/group6.png" alt="Group 6" width="200">
+            <button onclick="openModal(6)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第七組_龍の曙光</h2>
+            <img src="images/group7.png" alt="Group 7" width="200">
+            <button onclick="openModal(7)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第八組_胡金</h2>
+            <img src="images/group8.png" alt="Group 8" width="200">
+            <button onclick="openModal(8)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第九組_Pyteacher</h2>
+            <img src="images/group9.png" alt="Group 9" width="200">
+            <button onclick="openModal(9)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第十組_水星的委託</h2>
+            <img src="images/group10.png" alt="Group 10" width="200">
+            <button onclick="openModal(10)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第十一組_生生不息</h2>
+            <img src="images/group11.png" alt="Group 11" width="200">
+            <button onclick="openModal(11)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第十二組_潘朵拉之庭</h2>
+            <img src="images/group12.png" alt="Group 12" width="200">
+            <button onclick="openModal(12)">居住此地！</button>
+        </div>
+
+        <div class="voting-section">
+            <h2>第十三組_拾光</h2>
+            <img src="images/group13.png" alt="Group 13" width="200">
+            <button onclick="openModal(13)">居住此地！</button>
+        </div>
+
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalGroupName">確定嗎？</h3>
+                <button id="yesbtn">我就是要住這！！</button>
+                <button id="nobtn">再想想好了...</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let yesGroupNumber = null;
+        const groupNames = {
+            1: "深淵之光",
+            2: "廢柴勇者與他的不正經小夥伴",
+            3: "小小守護者",
+            4: "家秘日記",
+            5: "JustRun",
+            6: "戰略AI",
+            7: "龍の曙光",
+            8: "胡金",
+            9: "Pyteacher",
+            10: "水星的委託",
+            11: "生生不息",
+            12: "潘朵拉之庭",
+            13: "拾光"
+        };
+
+        function openModal(groupNumber){
+            yesGroupNumber = groupNumber;
+            const groupName = groupNames[groupNumber];
+            document.getElementById('modalGroupName').innerText = `${groupName}確定嗎？`;
+            document.getElementById('confirmModal').style.display = 'block';
+            document.body.classList.add('lock-scroll');
+        }
+
+        document.getElementById('yesbtn').onclick = function(){
+            vote(yesGroupNumber);
+            closeModal();
+        }
+
+        document.getElementById('nobtn').onclick = function(){
+            closeModal();
+        }
+
+        function closeModal(){
+            document.getElementById('confirmModal').style.display = 'none';
+            document.body.classList.remove('lock-scroll');
+        }
+        
+        const params = new URLSearchParams(window.location.search);
+        const visitorId = params.get('id');
+
+        function vote(groupNumber) {
+            console.log(`Visitor ID: ${visitorId}`);
+            
+            // 模擬投票請求
+            console.log(`Group: ${groupNumber}, Visitor ID: ${visitorId}`);
+            
+            // 在導向時加入 visitorId 和 groupNumber 到 URL
+            window.location.href = `/info.html?visitorId=${encodeURIComponent(visitorId)}&groupNumber=${encodeURIComponent(groupNumber)}`;
+        }
+    </script>
+</body>
+</html>
